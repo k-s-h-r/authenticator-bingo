@@ -1,0 +1,1 @@
+ALTER TABLE `BingoCards` ADD `last_open_number` integer;

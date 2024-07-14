@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1720958508582,
+      "tag": "0000_living_molecule_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1721021827384,
+      "tag": "0001_broad_secret_warriors",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1721405006748,
+      "tag": "0002_mature_dreaming_celestial",
+      "breakpoints": true
+    }
+  ]
+}

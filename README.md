@@ -19,11 +19,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Cloudflare integration
 
 Besides the `dev` script mentioned above `c3` has added a few extra scripts that allow you to integrate the application with the [Cloudflare Pages](https://pages.cloudflare.com/) environment, these are:
-  - `pages:build` to build the application for Pages using the [`@cloudflare/next-on-pages`](https://github.com/cloudflare/next-on-pages) CLI
-  - `preview` to locally preview your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
-  - `deploy` to deploy your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
 
-> __Note:__ while the `dev` script is optimal for local development you should preview your Pages application as well (periodically or before deployments) in order to make sure that it can properly work in the Pages environment (for more details see the [`@cloudflare/next-on-pages` recommended workflow](https://github.com/cloudflare/next-on-pages/blob/05b6256/internal-packages/next-dev/README.md#recommended-workflow))
+- `pages:build` to build the application for Pages using the [`@cloudflare/next-on-pages`](https://github.com/cloudflare/next-on-pages) CLI
+- `preview` to locally preview your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
+- `deploy` to deploy your Pages application using the [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
+
+> **Note:** while the `dev` script is optimal for local development you should preview your Pages application as well (periodically or before deployments) in order to make sure that it can properly work in the Pages environment (for more details see the [`@cloudflare/next-on-pages` recommended workflow](https://github.com/cloudflare/next-on-pages/blob/05b6256/internal-packages/next-dev/README.md#recommended-workflow))
 
 ### Bindings
 
@@ -35,13 +36,14 @@ You can use bindings during development, when previewing locally your applicatio
 
 - To use bindings in the preview mode you need to add them to the `pages:preview` script accordingly to the `wrangler pages dev` command. For more details see its [documentation](https://developers.cloudflare.com/workers/wrangler/commands/#dev-1) or the [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
 
-- To use bindings in the deployed application you will need to configure them in the Cloudflare [dashboard](https://dash.cloudflare.com/). For more details see the  [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
+- To use bindings in the deployed application you will need to configure them in the Cloudflare [dashboard](https://dash.cloudflare.com/). For more details see the [Pages Bindings documentation](https://developers.cloudflare.com/pages/functions/bindings/).
 
 #### KV Example
 
 `c3` has added for you an example showing how you can use a KV binding.
 
 In order to enable the example:
+
 - Search for javascript/typescript lines containing the following comment:
   ```ts
   // KV Example:
@@ -66,3 +68,31 @@ In order to enable the example:
 After doing this you can run the `dev` or `preview` script and visit the `/api/hello` route to see the example in action.
 
 Finally, if you also want to see the example work in the deployed application make sure to add a `MY_KV_NAMESPACE` binding to your Pages application in its [dashboard kv bindings settings section](https://dash.cloudflare.com/?to=/:account/pages/view/:pages-project/settings/functions#kv_namespace_bindings_section). After having configured it make sure to re-deploy your application.
+
+## DB Cloudflare D1
+
+### DB作成
+
+`npx wrangler d1 create authenticator-bingo`
+
+### DB削除
+
+`npx wrangler d1 delete authenticator-bingo`
+
+### migration
+
+- `npm run migrations:generate`
+- `npm run migrations:apply:local`
+- `npm run migrations:apply:remote`
+
+## DB マイグレーション注意
+
+https://zenn.dev/razokulover/articles/144a98d27c658e
+
+マイグレーションはDBへの適用前(applyコマンド実行前)ならdrizzle-kit drop(drizzle-kit drop – DrizzleORM)で破棄することができる。が、DBに適用済みの場合はd1_migrationsテーブルのレコード削除とdrop table <your-table-name>を手動で実行しないといけない。例えば以下のような感じ。
+
+```
+NO_D1_WARNING=true npx wrangler d1 execute SAMPLE_DB --local --command='select \* from d1_migrations'
+NO_D1_WARNING=true npx wrangler d1 execute SAMPLE_DB --local --command='delete from d1_migrations where id = 4' <- 取得したd1_migrationsテーブルのレコードのid
+NO_D1_WARNING=true npx wrangler d1 execute SAMPLE_DB --local --command='drop table users'
+```
