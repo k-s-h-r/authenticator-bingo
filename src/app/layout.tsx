@@ -22,6 +22,7 @@ export const metadata: Metadata = {
   title: 'Authenticator Bingo',
   description:
     'Authenticator Bingoは、Authenticatorアプリに表示される2桁の数字を使って遊ぶ、楽しいビンゴゲームです。',
+  manifest: '/manifest.json',
 };
 
 export default async function RootLayout({
